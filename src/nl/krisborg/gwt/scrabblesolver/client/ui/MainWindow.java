@@ -81,16 +81,16 @@ public class MainWindow implements EntryPoint {
 				} else {
 					ScrabbleSolverAsync scrabblesolver = GWT
 							.create(ScrabbleSolver.class);
-					AsyncCallback<List<Solution>> callback = new AsyncCallback<List<Solution>>() {
+					AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
 						public void onFailure(Throwable caught) {
 							// TODO: Do something with errors.
 						}
 
-						public void onSuccess(List<Solution> result) {
-							// updateTable(result);
+						public void onSuccess(Integer result) {
+							infoWidget.setStatus("Result: " + result);
 						}
 					};
-					scrabblesolver.findSolutions(null, callback);
+					scrabblesolver.doStuff(2, callback);
 					// findSolution();
 				}
 			}

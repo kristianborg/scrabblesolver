@@ -1,4 +1,7 @@
-.classpath 
-.project 
-.settings 
-classes 
+.classpath
+.project
+.settings
+war/scrabblesolver
+war/WEB-INF/classes/
+war/WEB-INF/deploy/
+gwt-unitCache/

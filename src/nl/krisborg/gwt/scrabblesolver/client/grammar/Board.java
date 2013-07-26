@@ -1,5 +1,6 @@
 package nl.krisborg.gwt.scrabblesolver.client.grammar;
 
+import java.io.Serializable;
 import java.util.*;
 
 import nl.krisborg.gwt.scrabblesolver.client.WordList;
@@ -13,7 +14,7 @@ import nl.krisborg.gwt.scrabblesolver.client.utils.TileHelper;
  */
 // TODO: if I add a wrapper around both 'board' and 'coordinates' they can have a rotate() function and its users
 // don't need to know its orientation
-public class Board {
+public class Board implements Serializable {
 
     // 0, 0 is bottom left; 14, 14 is top right
     public static final int DEFAULT_BOARD_SIZE = 15;
@@ -23,6 +24,10 @@ public class Board {
     private Field[][] board;
 
     private WordList wordList;
+    
+    public Board(){
+    	
+    }
 
     public Board(WordList wordList){
         this.wordList = wordList;

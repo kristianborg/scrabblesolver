@@ -3,6 +3,7 @@ package nl.krisborg.gwt.scrabblesolver.client;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 
 import nl.krisborg.gwt.scrabblesolver.client.ui.InfoWidget;
@@ -22,7 +23,7 @@ import com.google.gwt.user.client.Window;
  * User: Kris
  * Since: 9-10-11 13:20
  */
-public class WordList {
+public class WordList implements Serializable {
     private static final int MAX_WORD_LENGTH = 15;
 
     private Set<String> words;

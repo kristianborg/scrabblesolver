@@ -1,12 +1,14 @@
 package nl.krisborg.gwt.scrabblesolver.client.grammar;
 
+import java.io.Serializable;
+
 
 
 /**
  * User: Kris
  * Since: 15-10-11 15:17
  */
-public class Field {
+public class Field implements Serializable {
 
     private Tile tile;
     private ScoreMultiplier scoreMultiplier;
