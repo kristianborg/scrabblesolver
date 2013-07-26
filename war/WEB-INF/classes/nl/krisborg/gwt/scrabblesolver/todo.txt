@@ -1,9 +1,0 @@
-- consider bigger wordlist; current one contains only upto 10-char words
-- incorporate grammer-bugfix
-- add feedback of computation-status
-- improve algorithm; it's going to be sloooooooooooow
-- add compression to wordlist
-- check firefox error console; some css errors
-
-nice to have:
-- make board and tiles fully css-drawn
