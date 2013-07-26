@@ -1,7 +1,16 @@
 package nl.krisborg.gwt.scrabblesolver.server;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * User: Kris
@@ -14,14 +23,10 @@ public class WordList {
 
     private static final int MAX_WORD_LENGTH = 15;
 
-    private static final boolean SEARCH_HISTORY_CACHE_ENABLED = false;
-    private static final int SEARCH_HISTORY_CACHE_SIZE = 200;
-
     private List<String> files;
     private Set<String> words;
     private List<Character> allowedCharacters = Arrays.asList('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
     private Map<Integer, List<String>> wordsPerLength = new HashMap<Integer, List<String>>();
-    private LRUCache<String, List<String>> lruCache = new LRUCache<String, List<String>>(SEARCH_HISTORY_CACHE_SIZE);
 
     public static final List<String> UNKNOWN_BUT_SUPPORTED_WORDS = Arrays.asList("hi");
 
@@ -115,15 +120,6 @@ public class WordList {
             return result;
         }
 
-        if (SEARCH_HISTORY_CACHE_ENABLED && !isEmptyWord){
-            List<String> cacheResult = getFromCache(wordSubstring, distanceTillNextTile);
-            if (cacheResult != null){
-                i++;
-                System.out.println("hit " + i);
-                return cacheResult;
-            }
-        }
-
         long before = System.currentTimeMillis();
         int minWordLenght = distanceTillNextTile + wordSubstring.length();
         for (int i = minWordLenght; i <= maxWordLength; i++){
@@ -140,22 +136,8 @@ public class WordList {
             }
         }
 
-        if (SEARCH_HISTORY_CACHE_ENABLED){
-            addToCache(wordSubstring, distanceTillNextTile, result);
-        }
-
         getWordWithSubstringOnPositionTime += (System.currentTimeMillis() - before);
         return result;
-    }
-
-    private void addToCache(String wordSubstring, int distanceTillNextTile, List<String> wordList) {
-        String key = "" + distanceTillNextTile + "-" + wordSubstring;
-        lruCache.put(key, wordList);
-    }
-
-    private List<String> getFromCache(String wordSubstring, int distanceTillNextTile) {
-        String key = "" + distanceTillNextTile + "-" + wordSubstring;
-        return lruCache.get(key);
     }
 
     public boolean containsAllWords(List<String> introducedWords) {

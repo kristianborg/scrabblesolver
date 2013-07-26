@@ -1,6 +1,6 @@
 package nl.krisborg.gwt.scrabblesolver.client.ui;
 
-import nl.krisborg.gwt.scrabblesolver.client.grammar.ScoreMultiplier;
+import nl.krisborg.gwt.scrabblesolver.shared.ScoreMultiplier;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;

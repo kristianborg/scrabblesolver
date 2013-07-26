@@ -1,6 +1,5 @@
-package nl.krisborg.gwt.scrabblesolver.client.grammar;
+package nl.krisborg.gwt.scrabblesolver.shared;
 
-import java.io.Serializable;
 
 
 
@@ -8,7 +7,7 @@ import java.io.Serializable;
  * User: Kris
  * Since: 15-10-11 15:17
  */
-public class Field implements Serializable {
+public class Field {
 
     private Tile tile;
     private ScoreMultiplier scoreMultiplier;

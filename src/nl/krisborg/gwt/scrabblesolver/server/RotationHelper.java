@@ -1,6 +1,6 @@
-package nl.krisborg.gwt.scrabblesolver.client.utils;
+package nl.krisborg.gwt.scrabblesolver.server;
 
-import nl.krisborg.gwt.scrabblesolver.client.grammar.Field;
+import nl.krisborg.gwt.scrabblesolver.shared.Field;
 
 /**
  * User: Kris

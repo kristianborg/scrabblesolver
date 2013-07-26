@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import nl.krisborg.gwt.scrabblesolver.client.grammar.Field;
-import nl.krisborg.gwt.scrabblesolver.client.grammar.Solution;
-import nl.krisborg.gwt.scrabblesolver.client.grammar.Tile;
-import nl.krisborg.gwt.scrabblesolver.client.utils.BoardFactory;
-import nl.krisborg.gwt.scrabblesolver.client.utils.RotationHelper;
-import nl.krisborg.gwt.scrabblesolver.client.utils.TileHelper;
+import nl.krisborg.gwt.scrabblesolver.shared.BoardFactory;
+import nl.krisborg.gwt.scrabblesolver.shared.Field;
+import nl.krisborg.gwt.scrabblesolver.shared.Solution;
+import nl.krisborg.gwt.scrabblesolver.shared.Tile;
 
 public class Board {
 	

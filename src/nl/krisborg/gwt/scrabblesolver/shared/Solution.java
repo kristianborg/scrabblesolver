@@ -1,4 +1,4 @@
-package nl.krisborg.gwt.scrabblesolver.client.grammar;
+package nl.krisborg.gwt.scrabblesolver.shared;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,7 +9,8 @@ import java.util.List;
  * Since: 14-10-11 23:00
  */
 public class Solution implements Comparable<Solution>, Serializable {
-    private int x;
+	private static final long serialVersionUID = -6224448711782815564L;
+	private int x;
     private int y;
     private String word;
     private List<Solution> sideEffecSolutions;

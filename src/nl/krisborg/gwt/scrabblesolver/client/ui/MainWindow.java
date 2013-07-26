@@ -2,11 +2,9 @@ package nl.krisborg.gwt.scrabblesolver.client.ui;
 
 import nl.krisborg.gwt.scrabblesolver.client.ScrabbleSolver;
 import nl.krisborg.gwt.scrabblesolver.client.ScrabbleSolverAsync;
-import nl.krisborg.gwt.scrabblesolver.client.WordList;
 import nl.krisborg.gwt.scrabblesolver.client.grammar.Board;
-import nl.krisborg.gwt.scrabblesolver.client.grammar.Solution;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.BoardListener;
-import nl.krisborg.gwt.scrabblesolver.client.utils.BoardFactory;
+import nl.krisborg.gwt.scrabblesolver.shared.Solution;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -21,7 +19,6 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class MainWindow implements EntryPoint {
 
-	private WordList wordList;
 	private InfoWidget infoWidget = new InfoWidget();
 	private Board board;
 	private TilesWindget tilesWidget;
@@ -32,10 +29,7 @@ public class MainWindow implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 
-		wordList = new WordList();
-
-		board = new Board(wordList);
-		board.setBoard(BoardFactory.createBoard());
+		board = new Board();
 
 		RootPanel.get("solveButtonContainer").add(getSolveButton());
 

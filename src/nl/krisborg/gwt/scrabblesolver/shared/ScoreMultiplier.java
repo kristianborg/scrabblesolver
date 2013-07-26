@@ -1,4 +1,4 @@
-package nl.krisborg.gwt.scrabblesolver.client.grammar;
+package nl.krisborg.gwt.scrabblesolver.shared;
 
 public enum ScoreMultiplier {
     START(false, 1),

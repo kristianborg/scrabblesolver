@@ -2,10 +2,10 @@ package nl.krisborg.gwt.scrabblesolver.client.ui;
 
 import nl.krisborg.gwt.scrabblesolver.client.TyleType;
 import nl.krisborg.gwt.scrabblesolver.client.grammar.Board;
-import nl.krisborg.gwt.scrabblesolver.client.grammar.Field;
-import nl.krisborg.gwt.scrabblesolver.client.grammar.ScoreMultiplier;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.AddWordListener;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.BoardListener;
+import nl.krisborg.gwt.scrabblesolver.shared.Field;
+import nl.krisborg.gwt.scrabblesolver.shared.ScoreMultiplier;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

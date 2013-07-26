@@ -4,12 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import nl.krisborg.gwt.scrabblesolver.client.ScrabbleSolver;
-import nl.krisborg.gwt.scrabblesolver.client.grammar.Solution;
+import nl.krisborg.gwt.scrabblesolver.shared.Solution;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class ScrabbleSolverImpl extends RemoteServiceServlet implements ScrabbleSolver {
-	
+
+	private static final long serialVersionUID = 6259470137519300210L;
 	WordList wordList = new WordList(Arrays.asList("wordlist.txt"));
 
 	@Override

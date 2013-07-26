@@ -1,4 +1,4 @@
-package nl.krisborg.gwt.scrabblesolver.client.utils;
+package nl.krisborg.gwt.scrabblesolver.server;
 
 import java.util.ArrayList;
 import java.util.List;

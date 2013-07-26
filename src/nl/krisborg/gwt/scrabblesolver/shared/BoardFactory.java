@@ -1,7 +1,5 @@
-package nl.krisborg.gwt.scrabblesolver.client.utils;
+package nl.krisborg.gwt.scrabblesolver.shared;
 
-import nl.krisborg.gwt.scrabblesolver.client.grammar.Field;
-import nl.krisborg.gwt.scrabblesolver.client.grammar.ScoreMultiplier;
 
 public abstract class BoardFactory {
 
