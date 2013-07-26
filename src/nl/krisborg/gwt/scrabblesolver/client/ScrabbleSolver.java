@@ -1,11 +1,13 @@
 package nl.krisborg.gwt.scrabblesolver.client;
 
+import nl.krisborg.gwt.scrabblesolver.client.grammar.Solution;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 @RemoteServiceRelativePath("solver")
 public interface ScrabbleSolver extends RemoteService {
 	
-	public int doStuff(int bla);
+	public Solution[] getSolutions(Character[] boardTiles, Character[] handTiles);
 
 }

@@ -1,22 +1,17 @@
 package nl.krisborg.gwt.scrabblesolver.client.ui;
 
-import java.util.List;
-
 import nl.krisborg.gwt.scrabblesolver.client.ScrabbleSolver;
 import nl.krisborg.gwt.scrabblesolver.client.ScrabbleSolverAsync;
 import nl.krisborg.gwt.scrabblesolver.client.WordList;
 import nl.krisborg.gwt.scrabblesolver.client.grammar.Board;
 import nl.krisborg.gwt.scrabblesolver.client.grammar.Solution;
-import nl.krisborg.gwt.scrabblesolver.client.grammar.TileStack;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.BoardListener;
-import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.WordListListener;
 import nl.krisborg.gwt.scrabblesolver.client.utils.BoardFactory;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -31,7 +26,6 @@ public class MainWindow implements EntryPoint {
 	private Board board;
 	private TilesWindget tilesWidget;
 	private BoardListener boardListener;
-	private TileStack ts = new TileStack();
 
 	/**
 	 * This is the entry point method.
@@ -62,44 +56,24 @@ public class MainWindow implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				if (!wordList.isInitialized()) {
-					wordList.init(infoWidget);
-					infoWidget
-							.setStatus("Downloading word-list. Please wait...");
-					wordList.registerListener(new WordListListener() {
+				ScrabbleSolverAsync scrabblesolver = GWT
+						.create(ScrabbleSolver.class);
+				AsyncCallback<Solution[]> callback = new AsyncCallback<Solution[]>() {
+					public void onFailure(Throwable caught) {
+						// TODO: Do something with errors.
+					}
 
-						@Override
-						public void wordListLoaded() {
-							;
-							infoWidget.setWordListSize(wordList.getNumWords());
-							infoWidget
-									.setStatus("Looking for solution. Please wait...");
-							findSolution();
-						}
-
-					});
-				} else {
-					ScrabbleSolverAsync scrabblesolver = GWT
-							.create(ScrabbleSolver.class);
-					AsyncCallback<Integer> callback = new AsyncCallback<Integer>() {
-						public void onFailure(Throwable caught) {
-							// TODO: Do something with errors.
-						}
-
-						public void onSuccess(Integer result) {
-							infoWidget.setStatus("Result: " + result);
-						}
-					};
-					scrabblesolver.doStuff(2, callback);
-					// findSolution();
-				}
+					public void onSuccess(Solution[] result) {
+						findSolution(result);
+					}
+				};
+				scrabblesolver.getSolutions(board.getBoardTiles(), tilesWidget.getTiles(), callback);
 			}
 		});
 		return button;
 	}
 
-	private void findSolution() {
-		List<Solution> solutions = board.findSolutions(tilesWidget.getTiles());
+	private void findSolution(Solution[] solutions) {
 		Solution best = null;
 		for (Solution solution : solutions) {
 			if (best == null || solution.getPoints() > best.getPoints()) {

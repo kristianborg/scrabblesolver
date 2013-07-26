@@ -1,120 +1,56 @@
-package nl.krisborg.gwt.scrabblesolver.client.grammar;
+package nl.krisborg.gwt.scrabblesolver.server;
 
-import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import nl.krisborg.gwt.scrabblesolver.client.WordList;
+import nl.krisborg.gwt.scrabblesolver.client.grammar.Field;
+import nl.krisborg.gwt.scrabblesolver.client.grammar.Solution;
+import nl.krisborg.gwt.scrabblesolver.client.grammar.Tile;
 import nl.krisborg.gwt.scrabblesolver.client.utils.BoardFactory;
 import nl.krisborg.gwt.scrabblesolver.client.utils.RotationHelper;
 import nl.krisborg.gwt.scrabblesolver.client.utils.TileHelper;
 
-/**
- * User: Kris
- * Since: 9-10-11 13:47
- */
-// TODO: if I add a wrapper around both 'board' and 'coordinates' they can have a rotate() function and its users
-// don't need to know its orientation
-public class Board implements Serializable {
+public class Board {
+	
+	private static final int BOARD_SIZE = 15;
+	
+	// note: 0, 0 is bottom left; 14, 14 is top right
+	private Field[][] fields;
+	
+	private WordList wordList;
 
-    // 0, 0 is bottom left; 14, 14 is top right
-    public static final int DEFAULT_BOARD_SIZE = 15;
-
-    private int boardSize;
-    // TODO: rename to fields?
-    private Field[][] board;
-
-    private WordList wordList;
-    
-    public Board(){
-    	
-    }
-
-    public Board(WordList wordList){
-        this.wordList = wordList;
-        initialize();
-    }
-
-    public void initialize(){
-        boardSize = DEFAULT_BOARD_SIZE;
-        this.board = BoardFactory.createBoard();
-    }
-
-    public List<Solution> findSolutions(List<Character> tiles){
+	
+	public Board(WordList wordList, Character[] tiles){
+		this.wordList = wordList;
+		this.fields = BoardFactory.createBoard();
+		if (tiles != null){
+			int i = 0;
+			for (int y = 0; y < BOARD_SIZE; y++){
+				for(int x = 0; x < BOARD_SIZE; x++){
+					if (tiles[i] != '.'){
+						fields[x][y].setTile(tiles[i]);
+					}
+					i++;
+				}
+			}
+		}
+	}
+	
+	public List<Solution> findSolutions(List<Character> tiles){
         if (boardEmpty()){
             return getSolutionsForEmptyBoard(tiles);
         }
 
         List<Solution> words = new ArrayList<Solution>();
-        for (int y = Board.DEFAULT_BOARD_SIZE - 1; y >= 0; y--){
-            for (int x = 0; x < Board.DEFAULT_BOARD_SIZE - 1; x++){
+        for (int y = BOARD_SIZE - 1; y >= 0; y--){
+            for (int x = 0; x < BOARD_SIZE - 1; x++){
                 words.addAll(findWordsOnPosition(x, y, tiles));
             }
         }
         return words;
     }
-
-    // TODO: add test
-    public void addSolution(Solution solution){
-        String word = solution.getWord();
-
-        if (solution.isHorizontal()){
-
-            int y = solution.getY();
-            for (int i = 0; i < word.length(); i++){
-
-                int x = solution.getX() + i;
-                Character tile = word.charAt(i);
-                if (containsTile(x, y, board)){
-
-                    if (board[x][y].getTileValue() != tile){
-                        throw new RuntimeException("Illegal solution: " + solution + " for board " + board);
-                    }
-                } else {
-
-                    board[x][y].setTile(tile);
-                }
-            }
-        } else {
-            int x = solution.getX();
-            for (int i = 0; i < word.length(); i++){
-
-                int y = solution.getY() - i;
-                Character tile = word.charAt(i);
-                if (containsTile(x, y, board)){
-
-                    if (board[x][y].getTileValue() != tile){
-                        System.out.println(toFormattedString(board));
-                    }
-                } else {
-
-                    board[x][y].setTile(tile);
-                }
-            }
-        }
-    }
-
-    public void setBoard(Field[][] board){
-        this.board = board;
-        this.boardSize = board.length;
-    }
-
-    public Field[][] getBoardCharArray(){
-        return board;
-    }
-    
-    public Character[] getBoardTiles(){
-    	Character[] result = new Character[DEFAULT_BOARD_SIZE * DEFAULT_BOARD_SIZE];
-    	int i = 0;
-    	for(int y = 0; y < DEFAULT_BOARD_SIZE; y++){
-    		for(int x = 0; x < DEFAULT_BOARD_SIZE; x++){
-    			result[i] = board[x][y].getTileValue();
-    			i++;
-    		}
-    	}
-    	return result;
-    }
-
-    // TODO: add test
+	
     private List<Solution> getSolutionsForEmptyBoard(List<Character> tiles) {
         List<Solution> result = new ArrayList<Solution>();
         Collection<String> words = wordList.getWordsWithMaxLength(tiles.size());
@@ -130,8 +66,8 @@ public class Board implements Serializable {
                 continue;
             }
 
-            Solution solution = new Solution(boardSize / 2, boardSize / 2, word);
-            solution.setPoints(getPoints(solution, board, false));
+            Solution solution = new Solution(BOARD_SIZE / 2, BOARD_SIZE / 2, word);
+            solution.setPoints(getPoints(solution, fields, false));
             solution.setHorizontal(true);
             solution.setRequiredTiles(requiredTiles);
 
@@ -143,10 +79,10 @@ public class Board implements Serializable {
 
     private List<Solution> findWordsOnPosition(int x, int y, List<Character> tiles){
         List<Solution> solutions = new ArrayList<Solution>();
-        int[] flippedCoordinates = RotationHelper.rotateLeft(new int[]{x, y}, boardSize);
-        Field[][] flippedBoard = RotationHelper.rotateLeft(board);
+        int[] flippedCoordinates = RotationHelper.rotateLeft(new int[]{x, y}, BOARD_SIZE);
+        Field[][] flippedBoard = RotationHelper.rotateLeft(fields);
 
-        solutions.addAll(findWordsOnPosition(x, y, board, tiles, false));
+        solutions.addAll(findWordsOnPosition(x, y, fields, tiles, false));
         solutions.addAll(findWordsOnPosition(flippedCoordinates[0], flippedCoordinates[1], flippedBoard, tiles, true));
 
         return solutions;
@@ -166,7 +102,7 @@ public class Board implements Serializable {
 
         Solution subWord = getWordOnPosition(x + distanceTillNextTile, y, myBoard);
         String wordSubstring = subWord == null ? "" : subWord.getWord();
-        Collection<String> wordCandidates = wordList.getWordWithSubstringOnPosition(wordSubstring, distanceTillNextTile, boardSize - x);
+        Collection<String> wordCandidates = wordList.getWordWithSubstringOnPosition(wordSubstring, distanceTillNextTile, BOARD_SIZE - x);
 
         for (String wordCandidate : wordCandidates) {
 
@@ -196,7 +132,7 @@ public class Board implements Serializable {
             // if applicable, find out the original x,y coordinates before flipping their positions
             Solution solution;
             if (isFlipped){
-                int[] originalCoordinates = RotationHelper.rotateRight(new int[]{x, y}, boardSize);
+                int[] originalCoordinates = RotationHelper.rotateRight(new int[]{x, y}, BOARD_SIZE);
                 solution = new Solution(originalCoordinates[0], originalCoordinates[1], wordCandidate, introducedWords);
             } else {
                 solution = new Solution(x, y, wordCandidate, introducedWords);
@@ -228,7 +164,7 @@ public class Board implements Serializable {
         if (isFlipped){
             // since the board is flipped, we need to also rotate the Solutions coordinates
             // This because Solution always contains normalized coordinates
-            int[] flippedCoordinates = RotationHelper.rotateLeft(new int[]{solution.getX(), solution.getY()}, boardSize);
+            int[] flippedCoordinates = RotationHelper.rotateLeft(new int[]{solution.getX(), solution.getY()}, BOARD_SIZE);
             result = getPoints(flippedCoordinates[0], flippedCoordinates[1], solution.getWord(), myBoard);
         } else {
             result = getPoints(solution.getX(), solution.getY(), solution.getWord(), myBoard);
@@ -247,7 +183,7 @@ public class Board implements Serializable {
 
                 // The board is not flipped yet, so we need to flip the board, and the side-effect's coordinates
                 flipped = RotationHelper.rotateLeft(myBoard);
-                flippedCoordinates = RotationHelper.rotateLeft(new int[]{sideEffectSolution.getX(), sideEffectSolution.getY()}, boardSize);
+                flippedCoordinates = RotationHelper.rotateLeft(new int[]{sideEffectSolution.getX(), sideEffectSolution.getY()}, BOARD_SIZE);
             }
             result+= getPoints(flippedCoordinates[0], flippedCoordinates[1], sideEffectSolution.getWord(), flipped);
         }
@@ -280,7 +216,7 @@ public class Board implements Serializable {
     }
 
     protected boolean containsTile(int x, int y, Field[][] my) {
-        if (x < 0 || x > boardSize - 1 || y < 0 || y > boardSize -1) {
+        if (x < 0 || x > BOARD_SIZE - 1 || y < 0 || y > BOARD_SIZE -1) {
             return false;
         }
 
@@ -288,7 +224,7 @@ public class Board implements Serializable {
     }
 
     protected int distanceTillNextTile(int x, int y, Field[][] my) {
-        for (int i = 0; i + x < boardSize; i++){
+        for (int i = 0; i + x < BOARD_SIZE; i++){
             if (containsTile(x + i, y, my)){
                 return i;
             }
@@ -310,7 +246,7 @@ public class Board implements Serializable {
 
         String word = "";
         int startIndex = -1;
-        for (int i = 0; i < boardSize; i++){
+        for (int i = 0; i < BOARD_SIZE; i++){
 
             if (containsTile(i, y, my)){
 
@@ -338,7 +274,7 @@ public class Board implements Serializable {
 
     protected boolean wordFits(int x, int y, String wordCandidate, Field[][] my) {
 
-        if (x + wordCandidate.length() > boardSize){
+        if (x + wordCandidate.length() > BOARD_SIZE){
             return false;
         }
         for (int i = 0; i < wordCandidate.length(); i++){
@@ -374,7 +310,7 @@ public class Board implements Serializable {
     }
 
     private boolean isInsideBoard(int point){
-        return point >= 0 && point < boardSize;
+        return point >= 0 && point < BOARD_SIZE;
     }
 
     protected List<Character> getMissingCharactersForWord(int x, int y, String wordCandidate, Field[][] my) {
@@ -410,16 +346,16 @@ public class Board implements Serializable {
                 int[] flippedCoordinates;
                 if (isFlipped){
                     // TODO: create unittest for this part. No idea if its correct
-                    flippedCoordinates = RotationHelper.rotateRight(new int[]{x + i, y}, boardSize);
+                    flippedCoordinates = RotationHelper.rotateRight(new int[]{x + i, y}, BOARD_SIZE);
                     flipped = RotationHelper.rotateRight(myBoard);
 
                     result.add(getWordOnPosition(flippedCoordinates[0], flippedCoordinates[1], flipped));
                 } else {
-                    flippedCoordinates = RotationHelper.rotateLeft(new int[]{x + i, y}, boardSize);
+                    flippedCoordinates = RotationHelper.rotateLeft(new int[]{x + i, y}, BOARD_SIZE);
                     flipped = RotationHelper.rotateLeft(myBoard);
 
                     Solution introducedWord = getWordOnPosition(flippedCoordinates[0], flippedCoordinates[1], flipped);
-                    int[] introducedWordFlippedCoordinates = RotationHelper.rotateRight(new int[]{introducedWord.getX(), introducedWord.getY()}, boardSize);
+                    int[] introducedWordFlippedCoordinates = RotationHelper.rotateRight(new int[]{introducedWord.getX(), introducedWord.getY()}, BOARD_SIZE);
 
                     result.add(new Solution(introducedWordFlippedCoordinates[0], introducedWordFlippedCoordinates[1], introducedWord.getWord()));
                 }
@@ -431,45 +367,14 @@ public class Board implements Serializable {
         return result;
     }
 
-    // TODO: add test
     private boolean boardEmpty() {
-        for (Field[] fields : board) {
-            for (Field field : fields) {
+        for (Field[] fieldArray : fields) {
+            for (Field field : fieldArray) {
                 if (field.containsTile()){
                     return false;
                 }
             }
         }
         return true;
-    }
-
-    public String toFormattedString(){
-        return toFormattedString(board);
-    }
-
-    public String toFormattedString(Field[][] myBoard){
-        String result = "  _______________\r\n";
-        for (int y = boardSize - 1; y >= 0; y--){
-            result+= y%10 + "|";
-            for (int x = 0; x < boardSize; x++){
-                result+= myBoard[x][y].getTileValue();
-            }
-            result+= "|\r\n";
-        }
-        result += "  _______________\r\n";
-        result += "  012345678901234\r\n";
-        return result;
-    }
-
-    @Override
-    public String toString(){
-        String result = "";
-        for (int y = boardSize - 1; y >= 0; y--){
-            for (int x = 0; x < boardSize; x++){
-                result+= board[x][y].getTileValue();
-            }
-            result+= "\r\n";
-        }
-        return result;
     }
 }

@@ -1,8 +1,5 @@
 package nl.krisborg.gwt.scrabblesolver.client.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import nl.krisborg.gwt.scrabblesolver.client.TyleType;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.AddWordListener;
 
@@ -56,10 +53,11 @@ public class TilesWindget extends AbsolutePanel implements AddWordListener {
 		drawTiles();
 	}
 	
-	public List<Character> getTiles() {
-		List<Character> result = new ArrayList<Character>();
-		for (Character c : tiles.toCharArray()){
-			result.add(c);
+	public Character[] getTiles() {
+		char[] charArray = tiles.toCharArray();
+		Character[] result = new Character[charArray.length];
+		for(int i = 0; i < charArray.length; i++ ){
+			result[i] = charArray[i];
 		}
 		return result;
 	}

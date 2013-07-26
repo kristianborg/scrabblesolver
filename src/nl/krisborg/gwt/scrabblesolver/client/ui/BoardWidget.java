@@ -1,21 +1,17 @@
 package nl.krisborg.gwt.scrabblesolver.client.ui;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
-
 import nl.krisborg.gwt.scrabblesolver.client.TyleType;
 import nl.krisborg.gwt.scrabblesolver.client.grammar.Board;
 import nl.krisborg.gwt.scrabblesolver.client.grammar.Field;
 import nl.krisborg.gwt.scrabblesolver.client.grammar.ScoreMultiplier;
-import nl.krisborg.gwt.scrabblesolver.client.grammar.Tile;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.AddWordListener;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.BoardListener;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Widget;
 
 //public class BoardWidget extends Grid implements BoardListener {
 public class BoardWidget extends AbsolutePanel implements BoardListener, AddWordListener {

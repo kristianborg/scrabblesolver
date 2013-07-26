@@ -1,5 +1,6 @@
 package nl.krisborg.gwt.scrabblesolver.client.grammar;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
  * User: Kris
  * Since: 14-10-11 23:00
  */
-public class Solution implements Comparable<Solution> {
+public class Solution implements Comparable<Solution>, Serializable {
     private int x;
     private int y;
     private String word;
@@ -15,6 +16,10 @@ public class Solution implements Comparable<Solution> {
     private List<Character> requiredTiles;
     private int points = 0;
     private Boolean horizontal = null;
+    
+    public Solution(){
+    	
+    }
 
     public Solution(int x, int y, String word){
         this (x,  y, word, new ArrayList<Solution>());

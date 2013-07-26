@@ -1,22 +1,23 @@
 package nl.krisborg.gwt.scrabblesolver.client;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import nl.krisborg.gwt.scrabblesolver.client.ui.InfoWidget;
-import nl.krisborg.gwt.scrabblesolver.client.ui.MainWindow;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.WordListListener;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.RequestBuilder.Method;
 import com.google.gwt.user.client.Window;
 
 /**
