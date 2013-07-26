@@ -6,6 +6,15 @@
 <web-app>
   
   <!-- Servlets -->
+  <servlet>
+  	<servlet-name>ScrabbleSolverImpl</servlet-name>
+  	<servlet-class>nl.krisborg.gwt.scrabblesolver.server.ScrabbleSolverImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>ScrabbleSolverImpl</servlet-name>
+  	<url-pattern>/scrabblesolver/solver</url-pattern>
+  </servlet-mapping>
   
   <!-- Default page to serve -->
   <welcome-file-list>
