@@ -4,12 +4,6 @@ import nl.krisborg.gwt.scrabblesolver.shared.BoardFactory;
 import nl.krisborg.gwt.scrabblesolver.shared.Field;
 import nl.krisborg.gwt.scrabblesolver.shared.Solution;
 
-/**
- * User: Kris
- * Since: 9-10-11 13:47
- */
-// TODO: if I add a wrapper around both 'board' and 'coordinates' they can have a rotate() function and its users
-// don't need to know its orientation
 public class Board  {
 
 
@@ -20,10 +14,6 @@ public class Board  {
     public Board(){
     	this.board = BoardFactory.createBoard();
     }
-/*
-    public void initialize(){
-        this.board = BoardFactory.createBoard();
-    }*/
 
     public void addSolution(Solution solution){
         String word = solution.getWord();
