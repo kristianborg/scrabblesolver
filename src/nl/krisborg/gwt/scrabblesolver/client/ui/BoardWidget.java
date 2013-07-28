@@ -2,9 +2,9 @@ package nl.krisborg.gwt.scrabblesolver.client.ui;
 
 import nl.krisborg.gwt.scrabblesolver.client.TyleType;
 import nl.krisborg.gwt.scrabblesolver.client.grammar.Board;
-import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.AddWordListener;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.KeyBoardInterceptor;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.KeyBoardListener;
+import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.SolutionListener;
 import nl.krisborg.gwt.scrabblesolver.shared.Field;
 import nl.krisborg.gwt.scrabblesolver.shared.ScoreMultiplier;
 import nl.krisborg.gwt.scrabblesolver.shared.Solution;
@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class BoardWidget extends AbsolutePanel implements 
-		AddWordListener, KeyBoardListener {
+		KeyBoardListener, SolutionListener {
 	
 	private static final int TILE_OFFSET = 1;
 	private static final int TILE_FIELD_SIZE = 40;
@@ -122,33 +122,17 @@ public class BoardWidget extends AbsolutePanel implements
 		}
 		updateFocusField();
 	}
-
-	@Override
-	public void addWord(int x, int y, String word) {
-		Field[][] fields = board.getBoardCharArray();
-		for (int i = 0; i < word.length() && i < BOARD_SIZE; i++) {
-			fields[x + i][y].setTile(word.charAt(i));
-		}
-		clear();
-		drawBoard();
-	}
-
-	public void addTempWord(int x, int y, String word) {
-		for (int i = 0; i < word.length() && i < BOARD_SIZE; i++) {
-			addTile(x + i, y, word.charAt(i), TyleType.ACTIVE);
-		}
-	}
 	
 	private void doCancel(){
-		drawBoard();
 		focusField.setVisible(false);
-		tempBoard = board.clone();
 		editMode = false;
+		undoTempBoard();
 		
 	}
 
-	public void clearTempWord() {
+	private void undoTempBoard() {
 		tempBoard = board.clone();
+		drawBoard();
 	}
 
 	private void drawBoard() {
@@ -217,18 +201,49 @@ public class BoardWidget extends AbsolutePanel implements
 
 	private void doOk() {
 		focusField.setVisible(false);
+		editMode = false;
+		acceptTempBoard();
+	}
+	
+	private void acceptTempBoard(){
 		board = tempBoard;
 		tempBoard = board.clone();
-		editMode = false;
-		drawBoard();
-	}
-
-	public void addSolution(Solution solution) {
-		board.addSolution(solution);
 		drawBoard();
 	}
 
 	public Character[] getBoardTiles() {
 		return board.getBoardTiles();
+	}
+	
+	public void undoTempSolution(){
+		undoTempBoard();
+	}
+
+	@Override
+	public void addTempSolution(Solution solution) {
+		tempBoard.addSolution(solution);
+		String word = solution.getWord();
+
+        if (solution.isHorizontal()){
+
+            int y = solution.getY();
+            for (int i = 0; i < word.length(); i++){
+                int x = solution.getX() + i;
+                TyleType type = board.containsTile(x, y) ? TyleType.NORMAL : TyleType.ACTIVE;
+                addTile(x, y, word.charAt(i), type);
+            }
+        } else {
+            int x = solution.getX();
+            for (int i = 0; i < word.length(); i++){
+                int y = solution.getY() - i;
+                TyleType type = board.containsTile(x, y) ? TyleType.NORMAL : TyleType.ACTIVE;
+                addTile(x, y, word.charAt(i), type);
+            }
+        }
+	}
+
+	@Override
+	public void acceptSolution() {
+		acceptTempBoard();		
 	}
 }

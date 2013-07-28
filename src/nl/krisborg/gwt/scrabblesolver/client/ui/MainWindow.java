@@ -24,6 +24,7 @@ public class MainWindow implements EntryPoint, KeyBoardInterceptor {
 	private InfoWidget infoWidget = new InfoWidget();
 	private TilesWindget tilesWidget;
 	private BoardWidget boardWidget;
+	private SolutionsWidget solutionsWidget;
 	private KeyBoardListener activeKeyboardListener;
 	
 
@@ -40,6 +41,9 @@ public class MainWindow implements EntryPoint, KeyBoardInterceptor {
 
 		tilesWidget = new TilesWindget(this);
 		RootPanel.get("boardContainer").add(tilesWidget);
+		
+		solutionsWidget = new SolutionsWidget(boardWidget);
+		RootPanel.get("solutionsContainer").add(solutionsWidget);
 		
 		RootPanel.get().addDomHandler(new KeyPressHandler() {
 			@Override
@@ -65,7 +69,7 @@ public class MainWindow implements EntryPoint, KeyBoardInterceptor {
 					}
 
 					public void onSuccess(Solution[] result) {
-						findSolution(result);
+						solutionsWidget.setSolutions(result);
 					}
 				};
 				scrabblesolver.getSolutions(boardWidget.getBoardTiles(), tilesWidget.getTiles(), callback);
@@ -74,24 +78,7 @@ public class MainWindow implements EntryPoint, KeyBoardInterceptor {
 		return button;
 	}
 
-	private void findSolution(Solution[] solutions) {
-		Solution best = null;
-		for (Solution solution : solutions) {
-			if (best == null || solution.getPoints() > best.getPoints()) {
-				best = solution;
-			}
-		}
-		if (best == null) {
-			infoWidget.setStatus("No solution found for current tiles");
-		} else {
-			infoWidget.setStatus("Best solution: " + best.toString());
-			updateBoard(best);
-		}
-	}
-
-	private void updateBoard(Solution solution) {
-		boardWidget.addSolution(solution);
-	}
+	
 
 	@Override
 	public void setAvtiveListener(KeyBoardListener listener) {

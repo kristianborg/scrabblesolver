@@ -1,7 +1,6 @@
 package nl.krisborg.gwt.scrabblesolver.client.ui;
 
 import nl.krisborg.gwt.scrabblesolver.client.TyleType;
-import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.AddWordListener;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.KeyBoardInterceptor;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.KeyBoardListener;
 
@@ -11,7 +10,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 
-public class TilesWindget extends AbsolutePanel implements AddWordListener, KeyBoardListener {
+public class TilesWindget extends AbsolutePanel implements KeyBoardListener {
 	
 	private String tiles = ""; 
 	private static final int TILE_FIELD_SIZE = 40;
@@ -31,24 +30,6 @@ public class TilesWindget extends AbsolutePanel implements AddWordListener, KeyB
 	    }, ClickEvent.getType());
 		
 		
-		drawTiles();
-	}
-
-	@Override
-	public void addTempWord(int x, int y, String word) {
-		clear();
-		addWord(word, TyleType.ACTIVE);
-	}
-
-	@Override
-	public void addWord(int x, int y, String word) {
-		this.tiles = word;
-		drawTiles();
-		
-	}
-
-	@Override
-	public void clearTempWord() {
 		drawTiles();
 	}
 	
@@ -77,7 +58,7 @@ public class TilesWindget extends AbsolutePanel implements AddWordListener, KeyB
 	public void onKeyPress(KeyPressEvent event) {
 		char c = event.getCharCode();
 		if (Character.isLetter(c) && tiles.length() <= 7) {
-			tiles += c;
+			tiles += Character.toLowerCase(c);
 			addWord(tiles, TyleType.NORMAL);
 		}
 	}

@@ -95,4 +95,8 @@ public class Board  {
     	result.board = fieldsCopy;
     	return result;
     }
+
+	public boolean containsTile(int x, int y) {
+		return board[x][y].containsTile();
+	}
 }

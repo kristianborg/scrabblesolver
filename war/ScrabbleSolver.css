@@ -33,6 +33,26 @@ h1 {
   margin: 15px 6px 6px;
 }
 
+#main {
+	width: 800px;
+	margin-left: auto;
+    margin-right: auto;
+}
+
+#game {
+	margin: 5px;
+	float: left;
+}
+
+#solutions {
+	margin: 5px;
+	float: right;
+}
+
+.solution {
+	border: 2px;	
+}
+
 .scrabbleBoard {
 	background-image: url(scrabble-board.png); 
 	height: 602px; 
