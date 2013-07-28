@@ -15,6 +15,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class BoardWidget extends AbsolutePanel implements 
@@ -31,6 +32,12 @@ public class BoardWidget extends AbsolutePanel implements
 	private boolean editMode = false;
 	private int xEditPosition = 0;
 	private int yEditPosition = 0;
+	
+	private SimplePanel focusField = new SimplePanel(){
+		{
+			addStyleName("focusField");
+		}
+	};
 
 	public BoardWidget(final KeyBoardInterceptor interceptor) {
 		board = new Board();
@@ -50,10 +57,17 @@ public class BoardWidget extends AbsolutePanel implements
 						/ TILE_FIELD_SIZE;
 				editMode = true;
 				interceptor.setAvtiveListener(BoardWidget.this);
+				updateFocusField();
 			}
 
 		}, ClickEvent.getType());
 		drawBoard();
+	}
+	
+	private void updateFocusField(){
+		focusField.setVisible(true);
+		remove(focusField);
+		addWidget(xEditPosition, yEditPosition, focusField);
 	}
 	
 	private void addCharacter(char c){
@@ -70,6 +84,43 @@ public class BoardWidget extends AbsolutePanel implements
 		if (yEditPosition < 0){
 			yEditPosition = BOARD_SIZE - 1;
 		}
+		updateFocusField();
+	}
+	
+	private void moveEditPositionLeft(){
+		if (xEditPosition == 0){
+			xEditPosition = BOARD_SIZE - 1;
+		} else {
+			xEditPosition--;
+		}
+		updateFocusField();
+	}
+	
+	private void moveEditPositionRight(){
+		if (xEditPosition == BOARD_SIZE - 1){
+			xEditPosition = 0;
+		} else {
+			xEditPosition++;
+		}
+		updateFocusField();
+	}
+	
+	private void moveEditPositionUp(){
+		if (yEditPosition == BOARD_SIZE - 1){
+			yEditPosition = 0;
+		} else {
+			yEditPosition++;
+		}
+		updateFocusField();
+	}
+	
+	private void moveEditPositionDown(){
+		if (yEditPosition == 0){
+			yEditPosition = BOARD_SIZE - 1;
+		} else {
+			yEditPosition--;
+		}
+		updateFocusField();
 	}
 
 	@Override
@@ -90,6 +141,7 @@ public class BoardWidget extends AbsolutePanel implements
 	
 	private void doCancel(){
 		drawBoard();
+		focusField.setVisible(false);
 		tempBoard = board.clone();
 		editMode = false;
 		
@@ -136,6 +188,7 @@ public class BoardWidget extends AbsolutePanel implements
 				+ BOARD_OFFSET + TILE_OFFSET);
 	}
 
+
 	@Override
 	public void onKeyPress(KeyPressEvent event) {
 		if (!editMode) {
@@ -146,6 +199,14 @@ public class BoardWidget extends AbsolutePanel implements
 			doCancel();
 		} else if (keyCode == KeyCodes.KEY_ENTER) {
 			doOk();
+		} else if (keyCode == KeyCodes.KEY_DOWN){
+			moveEditPositionDown();
+		} else if (keyCode == KeyCodes.KEY_UP){
+			moveEditPositionUp();
+		} else if (keyCode == KeyCodes.KEY_LEFT){
+			moveEditPositionLeft();
+		} else if (keyCode == KeyCodes.KEY_RIGHT){
+			moveEditPositionRight();
 		} else {
 			char c = event.getCharCode();
 			if (Character.isLetter(c) || c == ' ') {
@@ -155,6 +216,7 @@ public class BoardWidget extends AbsolutePanel implements
 	}
 
 	private void doOk() {
+		focusField.setVisible(false);
 		board = tempBoard;
 		tempBoard = board.clone();
 		editMode = false;

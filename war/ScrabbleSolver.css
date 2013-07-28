@@ -65,6 +65,14 @@ h1 {
 	background-image: url(activeTile.png);
 }
 
+.focusField {
+	height: 34px; 
+	width: 34px;
+	border: 3;
+	border-style:solid;
+	border-color:black; 
+}
+
 .field {
 	height: 40px; 
 	width: 40px;
