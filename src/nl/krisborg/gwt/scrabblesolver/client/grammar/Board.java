@@ -33,6 +33,10 @@ public class Board  {
             }
         }
     }
+    
+    public void addCharacter(char c, int x, int y) {
+		board[x][y].setTile(c);
+	}
 
     public Field[][] getBoardCharArray(){
         return board;
@@ -78,5 +82,17 @@ public class Board  {
             result+= "\r\n";
         }
         return result;
+    }
+    
+    public Board clone(){
+    	Board result = new Board();
+    	Field[][] fieldsCopy = new Field[board.length][board[0].length];
+    	for(int i = 0; i < board.length; i++){
+    		for (int j = 0; j < board[0].length; j++){
+    			fieldsCopy[i][j] = board[i][j].clone();
+    		}
+    	}
+    	result.board = fieldsCopy;
+    	return result;
     }
 }

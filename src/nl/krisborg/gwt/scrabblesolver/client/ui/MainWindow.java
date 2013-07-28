@@ -2,8 +2,6 @@ package nl.krisborg.gwt.scrabblesolver.client.ui;
 
 import nl.krisborg.gwt.scrabblesolver.client.ScrabbleSolver;
 import nl.krisborg.gwt.scrabblesolver.client.ScrabbleSolverAsync;
-import nl.krisborg.gwt.scrabblesolver.client.grammar.Board;
-import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.BoardListener;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.KeyBoardInterceptor;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.KeyBoardListener;
 import nl.krisborg.gwt.scrabblesolver.shared.Solution;
@@ -24,9 +22,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class MainWindow implements EntryPoint, KeyBoardInterceptor {
 
 	private InfoWidget infoWidget = new InfoWidget();
-	private Board board;
 	private TilesWindget tilesWidget;
-	private BoardListener boardListener;
+	private BoardWidget boardWidget;
 	private KeyBoardListener activeKeyboardListener;
 	
 
@@ -34,16 +31,11 @@ public class MainWindow implements EntryPoint, KeyBoardInterceptor {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-
-		board = new Board();
-
 		RootPanel.get("solveButtonContainer").add(getSolveButton());
 
 		RootPanel.get("infoTextContainer").add(infoWidget);
 
-		BoardWidget boardWidget = new BoardWidget(this);
-		boardListener = boardWidget;
-		boardListener.registerNewBoard(board);
+		boardWidget = new BoardWidget(this);
 		RootPanel.get("boardContainer").add(boardWidget);
 
 		tilesWidget = new TilesWindget(this);
@@ -76,7 +68,7 @@ public class MainWindow implements EntryPoint, KeyBoardInterceptor {
 						findSolution(result);
 					}
 				};
-				scrabblesolver.getSolutions(board.getBoardTiles(), tilesWidget.getTiles(), callback);
+				scrabblesolver.getSolutions(boardWidget.getBoardTiles(), tilesWidget.getTiles(), callback);
 			}
 		});
 		return button;
@@ -98,8 +90,7 @@ public class MainWindow implements EntryPoint, KeyBoardInterceptor {
 	}
 
 	private void updateBoard(Solution solution) {
-		board.addSolution(solution);
-		boardListener.registerNewBoard(board);
+		boardWidget.addSolution(solution);
 	}
 
 	@Override

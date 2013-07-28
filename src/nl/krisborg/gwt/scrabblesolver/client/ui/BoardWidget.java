@@ -3,11 +3,11 @@ package nl.krisborg.gwt.scrabblesolver.client.ui;
 import nl.krisborg.gwt.scrabblesolver.client.TyleType;
 import nl.krisborg.gwt.scrabblesolver.client.grammar.Board;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.AddWordListener;
-import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.BoardListener;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.KeyBoardInterceptor;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.KeyBoardListener;
 import nl.krisborg.gwt.scrabblesolver.shared.Field;
 import nl.krisborg.gwt.scrabblesolver.shared.ScoreMultiplier;
+import nl.krisborg.gwt.scrabblesolver.shared.Solution;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -17,7 +17,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class BoardWidget extends AbsolutePanel implements BoardListener,
+public class BoardWidget extends AbsolutePanel implements 
 		AddWordListener, KeyBoardListener {
 	
 	private static final int TILE_OFFSET = 1;
@@ -26,13 +26,15 @@ public class BoardWidget extends AbsolutePanel implements BoardListener,
 	private static final int BOARD_SIZE = 15;
 
 	private Board board;
+	private Board tempBoard;
 
 	private boolean editMode = false;
 	private int xEditPosition = 0;
 	private int yEditPosition = 0;
-	private String tempWord = "";
 
 	public BoardWidget(final KeyBoardInterceptor interceptor) {
+		board = new Board();
+		tempBoard = board.clone();
 		setStyleName("scrabbleBoard");
 		setSize("602px", "602px");
 
@@ -51,10 +53,12 @@ public class BoardWidget extends AbsolutePanel implements BoardListener,
 			}
 
 		}, ClickEvent.getType());
+		drawBoard();
 	}
 	
 	private void addCharacter(char c){
 		addTile(xEditPosition, yEditPosition, c, TyleType.ACTIVE);
+		tempBoard.addCharacter(c, xEditPosition, yEditPosition);
 		if (xEditPosition == BOARD_SIZE - 1){
 			xEditPosition = 0;
 			yEditPosition--;
@@ -66,11 +70,6 @@ public class BoardWidget extends AbsolutePanel implements BoardListener,
 		if (yEditPosition < 0){
 			yEditPosition = BOARD_SIZE - 1;
 		}
-	}
-
-	public void registerNewBoard(Board board) {
-		this.board = board;
-		drawBoard();
 	}
 
 	@Override
@@ -91,13 +90,13 @@ public class BoardWidget extends AbsolutePanel implements BoardListener,
 	
 	private void doCancel(){
 		drawBoard();
-		tempWord = "";
+		tempBoard = board.clone();
 		editMode = false;
 		
 	}
 
 	public void clearTempWord() {
-		drawBoard();
+		tempBoard = board.clone();
 	}
 
 	private void drawBoard() {
@@ -146,13 +145,28 @@ public class BoardWidget extends AbsolutePanel implements BoardListener,
 		if (keyCode == KeyCodes.KEY_ESCAPE) {
 			doCancel();
 		} else if (keyCode == KeyCodes.KEY_ENTER) {
-			// doOk();
+			doOk();
 		} else {
 			char c = event.getCharCode();
 			if (Character.isLetter(c) || c == ' ') {
-				tempWord += c;
 				addCharacter(c);
 			}
 		}
+	}
+
+	private void doOk() {
+		board = tempBoard;
+		tempBoard = board.clone();
+		editMode = false;
+		drawBoard();
+	}
+
+	public void addSolution(Solution solution) {
+		board.addSolution(solution);
+		drawBoard();
+	}
+
+	public Character[] getBoardTiles() {
+		return board.getBoardTiles();
 	}
 }
