@@ -7,8 +7,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 public class TileWidget extends SimplePanel {
 
 	public TileWidget(Character character, TyleType tyleType){
-		super();
-		//setStyleName(tyleType.getType());
 		addStyleName("tile");
 		addStyleName(tyleType.getType());
 		Label label = new Label(character.toString().toUpperCase());

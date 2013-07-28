@@ -6,9 +6,7 @@ import nl.krisborg.gwt.scrabblesolver.shared.Solution;
 
 public class Board  {
 
-
     private int BOARD_SIZE = 15;
-    // TODO: rename to fields?
     private Field[][] board;
     
     public Board(){
@@ -22,34 +20,16 @@ public class Board  {
 
             int y = solution.getY();
             for (int i = 0; i < word.length(); i++){
-
                 int x = solution.getX() + i;
                 Character tile = word.charAt(i);
-                if (containsTile(x, y, board)){
-
-                    if (board[x][y].getTileValue() != tile){
-                        throw new RuntimeException("Illegal solution: " + solution + " for board " + board);
-                    }
-                } else {
-
-                    board[x][y].setTile(tile);
-                }
+                board[x][y].setTile(tile);
             }
         } else {
             int x = solution.getX();
             for (int i = 0; i < word.length(); i++){
-
                 int y = solution.getY() - i;
                 Character tile = word.charAt(i);
-                if (containsTile(x, y, board)){
-
-                    if (board[x][y].getTileValue() != tile){
-                        System.out.println(toFormattedString(board));
-                    }
-                } else {
-
-                    board[x][y].setTile(tile);
-                }
+                board[x][y].setTile(tile);
             }
         }
     }
@@ -68,14 +48,6 @@ public class Board  {
     		}
     	}
     	return result;
-    }
-
-    protected boolean containsTile(int x, int y, Field[][] my) {
-        if (x < 0 || x > BOARD_SIZE - 1 || y < 0 || y > BOARD_SIZE -1) {
-            return false;
-        }
-
-        return my[x][y].containsTile();
     }
 
     public String toFormattedString(){

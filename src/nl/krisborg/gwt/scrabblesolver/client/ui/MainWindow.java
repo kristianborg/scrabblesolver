@@ -4,12 +4,16 @@ import nl.krisborg.gwt.scrabblesolver.client.ScrabbleSolver;
 import nl.krisborg.gwt.scrabblesolver.client.ScrabbleSolverAsync;
 import nl.krisborg.gwt.scrabblesolver.client.grammar.Board;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.BoardListener;
+import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.KeyBoardInterceptor;
+import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.KeyBoardListener;
 import nl.krisborg.gwt.scrabblesolver.shared.Solution;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -17,12 +21,14 @@ import com.google.gwt.user.client.ui.RootPanel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class MainWindow implements EntryPoint {
+public class MainWindow implements EntryPoint, KeyBoardInterceptor {
 
 	private InfoWidget infoWidget = new InfoWidget();
 	private Board board;
 	private TilesWindget tilesWidget;
 	private BoardListener boardListener;
+	private KeyBoardListener activeKeyboardListener;
+	
 
 	/**
 	 * This is the entry point method.
@@ -35,13 +41,22 @@ public class MainWindow implements EntryPoint {
 
 		RootPanel.get("infoTextContainer").add(infoWidget);
 
-		BoardWidget boardWidget = new BoardWidget(15);
+		BoardWidget boardWidget = new BoardWidget(this);
 		boardListener = boardWidget;
 		boardListener.registerNewBoard(board);
 		RootPanel.get("boardContainer").add(boardWidget);
 
-		tilesWidget = new TilesWindget();
+		tilesWidget = new TilesWindget(this);
 		RootPanel.get("boardContainer").add(tilesWidget);
+		
+		RootPanel.get().addDomHandler(new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if(activeKeyboardListener != null){
+					activeKeyboardListener.onKeyPress(event);
+				}
+			}
+		}, KeyPressEvent.getType());
 	}
 
 	private Button getSolveButton() {
@@ -85,5 +100,10 @@ public class MainWindow implements EntryPoint {
 	private void updateBoard(Solution solution) {
 		board.addSolution(solution);
 		boardListener.registerNewBoard(board);
+	}
+
+	@Override
+	public void setAvtiveListener(KeyBoardListener listener) {
+		activeKeyboardListener = listener;
 	}
 }

@@ -4,72 +4,36 @@ import nl.krisborg.gwt.scrabblesolver.client.TyleType;
 import nl.krisborg.gwt.scrabblesolver.client.grammar.Board;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.AddWordListener;
 import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.BoardListener;
+import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.KeyBoardInterceptor;
+import nl.krisborg.gwt.scrabblesolver.client.ui.interfaces.KeyBoardListener;
 import nl.krisborg.gwt.scrabblesolver.shared.Field;
 import nl.krisborg.gwt.scrabblesolver.shared.ScoreMultiplier;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-//public class BoardWidget extends Grid implements BoardListener {
 public class BoardWidget extends AbsolutePanel implements BoardListener,
-		AddWordListener {
-
+		AddWordListener, KeyBoardListener {
+	
 	private static final int TILE_OFFSET = 1;
 	private static final int TILE_FIELD_SIZE = 40;
 	private static final int BOARD_OFFSET = 1;
 	private static final int BOARD_SIZE = 15;
 
 	private Board board;
-	private int size;
 
 	private boolean editMode = false;
 	private int xEditPosition = 0;
 	private int yEditPosition = 0;
 	private String tempWord = "";
 
-	public BoardWidget(final int size) {
-		
-		super();
-		
-		RootPanel.get().addDomHandler(new KeyDownHandler() {
-
-			@Override
-			public void onKeyDown(KeyDownEvent event) {
-				int keyCode = event.getNativeEvent().getKeyCode();
-				if (keyCode == KeyCodes.KEY_ESCAPE) {
-					doCancel();
-				} else if (keyCode == KeyCodes.KEY_ENTER) {
-					// doOk();
-				}
-			}
-		}, KeyDownEvent.getType());
-		
-		RootPanel.get().addDomHandler(new KeyPressHandler() {
-
-			@Override
-			public void onKeyPress(KeyPressEvent event) {
-				char c = event.getCharCode();
-				if (editMode) {
-					if (Character.isLetter(c) || c == ' ') {
-						tempWord += c;
-						addCharacter(c);
-					}
-				}
-			}
-
-		}, KeyPressEvent.getType());
-		
+	public BoardWidget(final KeyBoardInterceptor interceptor) {
 		setStyleName("scrabbleBoard");
-		this.size = size;
 		setSize("602px", "602px");
 
 		sinkEvents(Event.ONCLICK);
@@ -79,55 +43,28 @@ public class BoardWidget extends AbsolutePanel implements BoardListener,
 			public void onClick(ClickEvent event) {
 				xEditPosition = (event.getRelativeX(getElement()) - BOARD_OFFSET)
 						/ TILE_FIELD_SIZE;
-				yEditPosition = size - 1
+				yEditPosition = BOARD_SIZE - 1
 						- (event.getRelativeY(getElement()) - BOARD_OFFSET)
 						/ TILE_FIELD_SIZE;
 				editMode = true;
+				interceptor.setAvtiveListener(BoardWidget.this);
 			}
 
 		}, ClickEvent.getType());
-
-		addHandler(new KeyDownHandler() {
-
-			@Override
-			public void onKeyDown(KeyDownEvent event) {
-				int keyCode = event.getNativeEvent().getKeyCode();
-				if (keyCode == KeyCodes.KEY_ESCAPE) {
-					doCancel();
-				} else if (keyCode == KeyCodes.KEY_ENTER) {
-					// doOk();
-				}
-			}
-		}, KeyDownEvent.getType());
-
-		addHandler(new KeyPressHandler() {
-
-			@Override
-			public void onKeyPress(KeyPressEvent event) {
-				char c = event.getCharCode();
-				if (editMode) {
-					if (Character.isLetter(c) || c == ' ') {
-						tempWord += c;
-						addCharacter(c);
-					}
-				}
-			}
-
-		}, KeyPressEvent.getType());
 	}
 	
 	private void addCharacter(char c){
 		addTile(xEditPosition, yEditPosition, c, TyleType.ACTIVE);
 		if (xEditPosition == BOARD_SIZE - 1){
 			xEditPosition = 0;
-			yEditPosition++;
+			yEditPosition--;
 		} else {
 			xEditPosition++;
 		}
 		
 		// if we run out of board, move to the start
-		if (yEditPosition == BOARD_SIZE - 1){
-			yEditPosition = 0;
+		if (yEditPosition < 0){
+			yEditPosition = BOARD_SIZE - 1;
 		}
 	}
 
@@ -139,7 +76,7 @@ public class BoardWidget extends AbsolutePanel implements BoardListener,
 	@Override
 	public void addWord(int x, int y, String word) {
 		Field[][] fields = board.getBoardCharArray();
-		for (int i = 0; i < word.length() && i < size; i++) {
+		for (int i = 0; i < word.length() && i < BOARD_SIZE; i++) {
 			fields[x + i][y].setTile(word.charAt(i));
 		}
 		clear();
@@ -147,7 +84,7 @@ public class BoardWidget extends AbsolutePanel implements BoardListener,
 	}
 
 	public void addTempWord(int x, int y, String word) {
-		for (int i = 0; i < word.length() && i < size; i++) {
+		for (int i = 0; i < word.length() && i < BOARD_SIZE; i++) {
 			addTile(x + i, y, word.charAt(i), TyleType.ACTIVE);
 		}
 	}
@@ -166,8 +103,8 @@ public class BoardWidget extends AbsolutePanel implements BoardListener,
 	private void drawBoard() {
 		clear();
 		Field[][] fields = board.getBoardCharArray();
-		for (int y = 0; y < size; y++) {
-			for (int x = 0; x < size; x++) {
+		for (int y = 0; y < BOARD_SIZE; y++) {
+			for (int x = 0; x < BOARD_SIZE; x++) {
 				Field field = fields[x][y];
 				addField(x, y, field);
 			}
@@ -195,8 +132,27 @@ public class BoardWidget extends AbsolutePanel implements BoardListener,
 	}
 
 	private void addWidget(int x, int y, Widget widget) {
-		add(widget, (x * TILE_FIELD_SIZE) + BOARD_OFFSET + TILE_OFFSET, ((size
+		add(widget, (x * TILE_FIELD_SIZE) + BOARD_OFFSET + TILE_OFFSET, ((BOARD_SIZE
 				- y - 1) * TILE_FIELD_SIZE)
 				+ BOARD_OFFSET + TILE_OFFSET);
+	}
+
+	@Override
+	public void onKeyPress(KeyPressEvent event) {
+		if (!editMode) {
+			return;
+		}
+		int keyCode = event.getNativeEvent().getKeyCode();
+		if (keyCode == KeyCodes.KEY_ESCAPE) {
+			doCancel();
+		} else if (keyCode == KeyCodes.KEY_ENTER) {
+			// doOk();
+		} else {
+			char c = event.getCharCode();
+			if (Character.isLetter(c) || c == ' ') {
+				tempWord += c;
+				addCharacter(c);
+			}
+		}
 	}
 }

@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 public class FieldWidget extends SimplePanel {
 	
 	public FieldWidget(ScoreMultiplier scoreMultiplier){
-		super();
 		addStyleName("field");
 		if (scoreMultiplier != ScoreMultiplier.START){
 			addStyleName(scoreMultiplier.toString() + "Field");
