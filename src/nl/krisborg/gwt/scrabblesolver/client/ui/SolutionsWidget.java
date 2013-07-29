@@ -8,6 +8,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class SolutionsWidget extends VerticalPanel {
 	
+	private static final int MAX_SOLUTIONS = 15;
+	
 	private Solution[] solutions;
 	
 	private SolutionListener solutionListener;
@@ -31,9 +33,13 @@ public class SolutionsWidget extends VerticalPanel {
 		clear();
 		add(new Label("Solutions"));
 		if (solutions != null){
-			for(int i = 0; i < solutions.length; i++){
+			for(int i = 0; i < solutions.length && i < MAX_SOLUTIONS; i++){
 				add(new SolutionWidget(this, solutions[i]));
 			}
+		} else {
+			add(new SolutionWidget(this, new Solution(0, 0,"bla")));
+			add(new SolutionWidget(this, new Solution(0, 0,"blabla")));
+			add(new SolutionWidget(this, new Solution(0, 0,"blablablabla")));
 		}
 	}
 

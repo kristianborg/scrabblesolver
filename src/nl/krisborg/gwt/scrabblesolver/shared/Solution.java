@@ -100,14 +100,14 @@ public class Solution implements Comparable<Solution>, Serializable {
 
         String orientation = horizontal == null ? "" : horizontal ?", h":", v";
         result += word + " (" + x + ", " + y + orientation + ")";
-        if (sideEffecSolutions != null && !sideEffecSolutions.isEmpty()){
+        /*if (sideEffecSolutions != null && !sideEffecSolutions.isEmpty()){
             result += " [";
             for (Solution sideEffecSolution : sideEffecSolutions) {
                 result+= sideEffecSolution + ", ";
             }
             result = result.substring(0, result.length() - 2);
             result += "]";
-        }
+        }*/
         return result;
     }
 
