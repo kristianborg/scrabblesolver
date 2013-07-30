@@ -21,9 +21,9 @@ import com.google.gwt.user.client.ui.Widget;
 public class BoardWidget extends AbsolutePanel implements 
 		KeyBoardListener, SolutionListener {
 	
-	private static final int TILE_OFFSET = 1;
+	private static final int TILE_OFFSET = 0;
 	private static final int TILE_FIELD_SIZE = 40;
-	private static final int BOARD_OFFSET = 1;
+	private static final int BOARD_OFFSET = 0;
 	private static final int BOARD_SIZE = 15;
 
 	private Board board;
@@ -43,7 +43,6 @@ public class BoardWidget extends AbsolutePanel implements
 		board = new Board();
 		tempBoard = board.clone();
 		setStyleName("scrabbleBoard");
-		setSize("602px", "602px");
 
 		sinkEvents(Event.ONCLICK);
 		addHandler(new ClickHandler() {
@@ -147,11 +146,11 @@ public class BoardWidget extends AbsolutePanel implements
 	}
 
 	private void addField(int x, int y, Field field) {
+		addScoreMultiplier(x, y, field.getScoreMultiplier());
+		
 		Character c = field.getTileValue();
 		if (c != null && !c.equals(' ') && !c.equals('.')) {
 			addTile(x, y, c, TyleType.NORMAL);
-		} else if (field.getScoreMultiplier() != null) {
-			addScoreMultiplier(x, y, field.getScoreMultiplier());
 		}
 	}
 

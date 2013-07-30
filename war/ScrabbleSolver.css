@@ -1,18 +1,9 @@
-/** Add css rules here for your application. */
-
-
-/** Example rules used by the template application (remove for your app) */
 h1 {
   font-size: 2em;
   font-weight: bold;
   color: #777777;
   margin: 40px 0px 70px;
   text-align: center;
-}
-
-.sendButton {
-  display: block;
-  font-size: 16pt;
 }
 
 /** Most GWT widgets already have a style name defined */
@@ -26,11 +17,6 @@ h1 {
 
 .serverResponseLabelError {
   color: red;
-}
-
-/** Set ids using widget.getElement().setId("idOfElement") */
-#closeButton {
-  margin: 15px 6px 6px;
 }
 
 #header {
@@ -67,11 +53,13 @@ h1 {
 	background-color: #CFCFCF;
 }
 
-.scrabbleBoard {
-	background-image: url(scrabble-board.png); 
-	height: 602px; 
-	width: 602px; 
-	boarder:0;
+.scrabbleBoard { 
+	background-color: grey;
+	height: 600px; 
+	width: 600px; 
+	border-color: black;
+  	border-style: solid;
+  	border-width: 0 1px 1px 0;
 }
 
 .tilesBoard {
@@ -83,20 +71,22 @@ h1 {
 }
 
 .tile{
-	height: 40px; 
-	width: 40px;
 	font-size: 36px; 
 	text-align: center;
 	background-repeat:no-repeat;
-	boarder:0;
+	border: 1px solid black;
+	border-radius: 5px;
+	width: 37px;
+	height: 37px;
+	margin: 1px;
 }
 
 .normalTile{
-	background-image: url(tile.png);
+	background-color: white;
 }
 
 .activeTile{
-	background-image: url(activeTile.png);
+	background-color: yellow;
 }
 
 .focusField {
@@ -108,27 +98,29 @@ h1 {
 }
 
 .field {
-	height: 40px; 
-	width: 40px;
+	height: 39px; 
+	width: 39px;
 	font-size: 16px; 
 	font-color: white;
 	vertical-align: center;
-	background-repeat:no-repeat;
-	boarder:0;
+	border-color: black;
+  	border-style: solid;
+  	border-width: 1px 0 0 1px;
+	
 }
 
 .DWField {
-	background-image: url(dwField.png);
+	background-color: orange;
 }
 
 .TWField {
-	background-image: url(twField.png);
+	background-color: red;
 }
 
 .DLField {
-	background-image: url(dlField.png);
+	background-color: green;
 }
 
 .TLField {
-	background-image: url(tlField.png);
+	background-color: blue;
 }

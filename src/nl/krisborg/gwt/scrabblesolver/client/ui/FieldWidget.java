@@ -9,7 +9,7 @@ public class FieldWidget extends SimplePanel {
 	
 	public FieldWidget(ScoreMultiplier scoreMultiplier){
 		addStyleName("field");
-		if (scoreMultiplier != ScoreMultiplier.START){
+		if (scoreMultiplier != null && scoreMultiplier != ScoreMultiplier.START){
 			addStyleName(scoreMultiplier.toString() + "Field");
 			Label label = new Label(scoreMultiplier.toString());
 			add(label);
