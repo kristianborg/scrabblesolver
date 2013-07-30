@@ -137,5 +137,9 @@ public class Solution implements Comparable<Solution>, Serializable {
         result = 31 * result + (sideEffecSolutions != null ? sideEffecSolutions.hashCode() : 0);
         return result;
     }
+
+	public boolean isBingo() {
+		return requiredTiles != null && requiredTiles.size() == 7;
+	}
 }
 

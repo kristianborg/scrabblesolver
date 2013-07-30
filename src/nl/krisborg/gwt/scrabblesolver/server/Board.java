@@ -12,6 +12,8 @@ import nl.krisborg.gwt.scrabblesolver.shared.Tile;
 public class Board {
 	
 	private static final int BOARD_SIZE = 15;
+
+	private static final int BINGO_SCORE = 40;
 	
 	// note: 0, 0 is bottom left; 14, 14 is top right
 	private Field[][] fields;
@@ -65,9 +67,9 @@ public class Board {
             }
 
             Solution solution = new Solution(BOARD_SIZE / 2, BOARD_SIZE / 2, word);
+            solution.setRequiredTiles(requiredTiles);
             solution.setPoints(getPoints(solution, fields, false));
             solution.setHorizontal(true);
-            solution.setRequiredTiles(requiredTiles);
 
             result.add(solution);
         }
@@ -136,10 +138,10 @@ public class Board {
                 solution = new Solution(x, y, wordCandidate, introducedWords);
             }
 
+            solution.setRequiredTiles(requiredTiles);
             int points = getPoints(solution, myBoard, isFlipped);
             solution.setPoints(points);
             solution.setHorizontal(!isFlipped);
-            solution.setRequiredTiles(requiredTiles);
 
             result.add(solution);
         }
@@ -185,6 +187,11 @@ public class Board {
             }
             result+= getPoints(flippedCoordinates[0], flippedCoordinates[1], sideEffectSolution.getWord(), flipped);
         }
+        
+        if (solution.isBingo()){
+        	result += BINGO_SCORE;
+        }
+        
         return result;
     }
 

@@ -9,21 +9,22 @@ import nl.krisborg.gwt.scrabblesolver.shared.Solution;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public class ScrabbleSolverImpl extends RemoteServiceServlet implements ScrabbleSolver {
+public class ScrabbleSolverImpl extends RemoteServiceServlet implements
+		ScrabbleSolver {
 
 	private static final long serialVersionUID = 6259470137519300210L;
-	WordList wordList = new WordList(Arrays.asList("wordlist.txt"));
+	private WordList wordList = new WordList();
 
 	@Override
-	public Solution[] getSolutions(Character[] boardTiles, Character[] handTiles){
+	public Solution[] getSolutions(Character[] boardTiles, Character[] handTiles) {
 		Board board = new Board(wordList, boardTiles);
 		List<Solution> list = board.findSolutions(Arrays.asList(handTiles));
 		Collections.sort(list);
 		Collections.reverse(list);
 		Object[] objectArray = list.toArray();
 		Solution[] result = new Solution[objectArray.length];
-		for (int i = 0; i < objectArray.length; i++){
-			result[i] = (Solution)objectArray[i];
+		for (int i = 0; i < objectArray.length; i++) {
+			result[i] = (Solution) objectArray[i];
 		}
 		return result;
 	}
