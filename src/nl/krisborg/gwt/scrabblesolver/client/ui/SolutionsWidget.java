@@ -36,11 +36,7 @@ public class SolutionsWidget extends VerticalPanel {
 			for(int i = 0; i < solutions.length && i < MAX_SOLUTIONS; i++){
 				add(new SolutionWidget(this, solutions[i]));
 			}
-		} else {
-			add(new SolutionWidget(this, new Solution(0, 0,"bla")));
-			add(new SolutionWidget(this, new Solution(0, 0,"blabla")));
-			add(new SolutionWidget(this, new Solution(0, 0,"blablablabla")));
-		}
+		} 
 	}
 
 	public void activateSolution(Solution solution) {
